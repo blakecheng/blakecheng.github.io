@@ -4,11 +4,61 @@
   
     
     <entry>
+      <title>2020会议相关</title>
+      <link href="/2020/02/05/%E4%BC%9A%E8%AE%AE%E7%9B%B8%E5%85%B3/"/>
+      <url>/2020/02/05/%E4%BC%9A%E8%AE%AE%E7%9B%B8%E5%85%B3/</url>
+      
+        <content type="html"><![CDATA[<h2 id="会议截稿时间"><a href="#会议截稿时间" class="headerlink" title="会议截稿时间"></a>会议截稿时间</h2><ul><li><p>链接1:<a href="https://github.com/Sophia-11/AI-Conference" target="_blank" rel="noopener">https://github.com/Sophia-11/AI-Conference</a></p></li><li><p>已截稿：</p><table><thead><tr><th>会议</th><th>截稿时间</th><th>开会时间</th><th>简介</th><th>资料</th></tr></thead><tbody><tr><td>AAAI 2020</td><td>2019.09.05</td><td>2020.02.07-02.20</td><td></td><td></td></tr><tr><td>ICLR 2020</td><td>2019.09.25</td><td>2020.04.26-04.30</td><td></td><td></td></tr><tr><td>ICML 2020</td><td>2020.2.7</td><td>2020.07.13-18</td><td></td><td></td></tr></tbody></table></li><li><p>未截稿:</p><table><thead><tr><th>会议</th><th>截稿时间</th><th>开会时间</th><th>简介</th><th>资料</th></tr></thead><tbody><tr><td>ICPR 2020</td><td>2020.03.03</td><td>2020.9.13至18</td><td></td><td></td></tr><tr><td>ECCV 2020</td><td>2020.03.06</td><td>2020.8.23-28</td><td></td><td></td></tr></tbody></table></li></ul><ul><li>deadline：<a href="https://aideadlin.es/?sub=ML,CV,NLP,RO,SP,DM" target="_blank" rel="noopener">https://aideadlin.es/?sub=ML,CV,NLP,RO,SP,DM</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 会议相关 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>awesome hexo</title>
+      <link href="/2020/02/05/awesome-hexo/"/>
+      <url>/2020/02/05/awesome-hexo/</url>
+      
+        <content type="html"><![CDATA[<h2 id="hexo主题"><a href="#hexo主题" class="headerlink" title="hexo主题"></a>hexo主题</h2><ul><li><a href="https://github.com/devjin0617/awesome-hexo-theme" target="_blank" rel="noopener">https://github.com/devjin0617/awesome-hexo-theme</a></li><li><a href="https://hexo.io/themes/" target="_blank" rel="noopener">官方网站</a></li></ul><h2 id="hexo工具"><a href="#hexo工具" class="headerlink" title="hexo工具"></a>hexo工具</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> 环境搭建 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 博客搭建 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hexo 搭建博客</title>
       <link href="/2020/02/05/Hexo-%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/"/>
       <url>/2020/02/05/Hexo-%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</url>
       
-        <content type="html"><![CDATA[<h3 id="基本搭建步骤"><a href="#基本搭建步骤" class="headerlink" title="基本搭建步骤"></a>基本搭建步骤</h3><ul><li><p>参考资料</p><ul><li><p><a href="https://juejin.im/post/5d81d3036fb9a06b3260a901" target="_blank" rel="noopener">hexo+github+hexo-theme-matery搭建个人博客</a></p><ul><li><p>git、github设置</p></li><li><p>hexo安装和初始化</p><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">## 本地启动</span>hexo s<span class="token comment" spellcheck="true">## 发布到github(需要配置)</span>hexo d</code></pre><p>本地浏览器访问:<a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a></p><p>注意:</p><pre><code>在发布时如果本地已存在public需要执行hexo clean或者手动删除public目录，不然不会提交最新代码</code></pre></li></ul><ul><li>新增文章<pre><code>hexo new page [文章名]</code></pre></li><li>hexo-theme-matery主题设置</li></ul></li></ul></li></ul>]]></content>
+        <content type="html"><![CDATA[<h3 id="基本搭建步骤"><a href="#基本搭建步骤" class="headerlink" title="基本搭建步骤"></a>基本搭建步骤</h3><ul><li><p>参考资料</p><ul><li><p><a href="https://juejin.im/post/5d81d3036fb9a06b3260a901" target="_blank" rel="noopener">hexo+github+hexo-theme-matery搭建个人博客</a></p><ul><li><p>git、github设置</p></li><li><p>hexo安装和初始化</p><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">## 本地启动</span>hexo s<span class="token comment" spellcheck="true">## 发布到github(需要配置)</span>hexo d</code></pre><p>本地浏览器访问:<a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a></p><p>注意:</p><pre><code>在发布时如果本地已存在public需要执行hexo clean或者手动删除public目录，不然不会提交最新代码</code></pre></li></ul><ul><li>新增文章<pre><code>hexo new page [文章名]</code></pre></li><li>hexo-theme-matery主题设置–<a href="https://blinkfox.github.io/2018/09/28/qian-duan/hexo-bo-ke-zhu-ti-zhi-hexo-theme-matery-de-jie-shao/" target="_blank" rel="noopener">官方教程</a></li></ul></li></ul></li></ul><h2 id="相关工具和技巧"><a href="#相关工具和技巧" class="headerlink" title="相关工具和技巧"></a>相关工具和技巧</h2><ul><li>可视化编写博客–<a href="https://github.com/jaredly/hexo-admin" target="_blank" rel="noopener">hexo-admin</a><pre><code>## 启动命令hexo server -d</code></pre></li></ul><p>```<br>    本地浏览器访问:<a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a></p><ul><li>懒人发布工具–<a href="https://github.com/Hochikong/HexoPubAssistant" target="_blank" rel="noopener">HexoPubAssistant</a>(未测试）</li></ul>]]></content>
       
       
       <categories>
