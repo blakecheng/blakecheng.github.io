@@ -4,11 +4,577 @@
   
     
     <entry>
-      <title>2020会议相关</title>
-      <link href="/2020/02/05/%E4%BC%9A%E8%AE%AE%E7%9B%B8%E5%85%B3/"/>
-      <url>/2020/02/05/%E4%BC%9A%E8%AE%AE%E7%9B%B8%E5%85%B3/</url>
+      <title>变分推断</title>
+      <link href="/2020/06/04/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/"/>
+      <url>/2020/06/04/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/</url>
       
-        <content type="html"><![CDATA[<h2 id="会议截稿时间"><a href="#会议截稿时间" class="headerlink" title="会议截稿时间"></a>会议截稿时间</h2><ul><li><p>链接1:<a href="https://github.com/Sophia-11/AI-Conference" target="_blank" rel="noopener">https://github.com/Sophia-11/AI-Conference</a></p></li><li><p>已截稿：</p><table><thead><tr><th>会议</th><th>截稿时间</th><th>开会时间</th><th>简介</th><th>资料</th></tr></thead><tbody><tr><td>AAAI 2020</td><td>2019.09.05</td><td>2020.02.07-02.20</td><td></td><td></td></tr><tr><td>ICLR 2020</td><td>2019.09.25</td><td>2020.04.26-04.30</td><td></td><td></td></tr><tr><td>ICML 2020</td><td>2020.2.7</td><td>2020.07.13-18</td><td></td><td></td></tr></tbody></table></li><li><p>未截稿:</p><table><thead><tr><th>会议</th><th>截稿时间</th><th>开会时间</th><th>简介</th><th>资料</th></tr></thead><tbody><tr><td>ICPR 2020</td><td>2020.03.03</td><td>2020.9.13至18</td><td></td><td></td></tr><tr><td>ECCV 2020</td><td>2020.03.06</td><td>2020.8.23-28</td><td></td><td></td></tr></tbody></table></li></ul><ul><li>deadline：<a href="https://aideadlin.es/?sub=ML,CV,NLP,RO,SP,DM" target="_blank" rel="noopener">https://aideadlin.es/?sub=ML,CV,NLP,RO,SP,DM</a></li></ul>]]></content>
+        <content type="html"><![CDATA[<h2 id="Full-bayesian-inference"><a href="#Full-bayesian-inference" class="headerlink" title="Full bayesian inference"></a>Full bayesian inference</h2><p>Training stage:</p><script type="math/tex; mode=display">p\left(\theta | X_{t r}, Y_{t r}\right)=\frac{p\left(Y_{t r} | X_{t r}, \theta\right) p(\theta)}{\int p\left(Y_{t r} | X_{t r}, \theta\right) p(\theta) d \theta}</script><p>Testing stage:</p><script type="math/tex; mode=display">p\left(y | x, X_{t r}, Y_{t r}\right)=\int p(y | x, \theta) p\left(\theta | X_{t r}, Y_{t r}\right) d \theta</script><ul><li>$\int p\left(Y<em>{t r} | X</em>{t r}, \theta\right) p(\theta) d \theta $ may be intractable </li></ul><h2 id="Approximate-inference"><a href="#Approximate-inference" class="headerlink" title="Approximate inference"></a>Approximate inference</h2><p><img src="/2020/06/04/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/2020-06-04-10-59-25.png" alt></p><h2 id="Mathematical-magic"><a href="#Mathematical-magic" class="headerlink" title="Mathematical magic"></a>Mathematical magic</h2><script type="math/tex; mode=display">\begin{aligned}\log p(x) &=\int q(\theta) \log p(x) d \theta=\int q(\theta) \log \frac{p(x, \theta)}{p(\theta | x)} d \theta=\\&=\int q(\theta) \log \frac{p(x, \theta) q(\theta)}{p(\theta | x) q(\theta)} d \theta=\\&=\int q(\theta) \log \frac{p(x, \theta)}{q(\theta)} d \theta+\int q(\theta) \log \frac{q(\theta)}{p(\theta | x)} d \theta=\\&=[\mathcal{L}(q(\theta))]+[K L(q(\theta) \| p(\theta | x))]\end{aligned}</script><p><img src="/2020/06/04/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/2020-06-04-11-30-02.png" alt></p><ul><li><p>analysis<br><img src="/2020/06/04/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/2020-06-04-11-32-04.png" alt><br>where</p><script type="math/tex; mode=display">\begin{aligned}\mathcal{L}(q(\theta)) &=\int q(\theta) \log \frac{p(x, \theta)}{q(\theta)} d \theta=\int q(\theta) \log \frac{p(x | \theta) p(\theta)}{q(\theta)} d \theta=\\&=\int q(\theta) \log p(x | \theta) d \theta+\int q(\theta) \log \frac{p(\theta)}{q(\theta)} d \theta=\\&=\mathbb{E}_{0(\theta)} \log p(x | \theta)-K L(q(\theta) \| p(\theta))\end{aligned}</script><p><img src="/2020/06/04/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/2020-06-04-11-38-35.png" alt></p></li><li><p>$q(\theta)$ 的处理<br><img src="/2020/06/04/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/2020-06-04-11-40-37.png" alt></p><ul><li>Mean filed approximation<script type="math/tex; mode=display">\begin{aligned}\mathcal{L}(q(\theta)) &=\mathbb{E}_{q(\theta)} \log p(x, \theta)-\mathbb{E}_{q(\theta)} \log q(\theta)=\\&=\mathbb{E}_{q(\theta)} \log p(x, \theta)-\sum_{k=1}^{m} \mathbb{E}_{q_{k}\left(\theta_{k}\right)} \log q_{k}\left(\theta_{k}\right)=\\&=\mathbb{E}_{q_{j}\left(\theta_{j}\right)}\left[\mathbb{E}_{q_{i \neq j}} \log p(x, \theta)\right]-\mathbb{E}_{q_{j}\left(\theta_{j}\right)} \log q_{j}\left(\theta_{j}\right)+\text { Const }=\\&=\left\{r_{j}\left(\theta_{j}\right)=\frac{1}{Z_{j}} \exp \left(\mathbb{E}_{q_{i \neq j}} \log p(x, \theta)\right)\right\}=\\&=\mathbb{E}_{q_{j}\left(\theta_{j}\right)} \log \frac{r_{j}\left(\theta_{j}\right)}{q_{j}\left(\theta_{j}\right)}+\text { Const }=-K L\left(q_{j}\left(\theta_{j}\right) \| r_{j}\left(\theta_{j}\right)\right)+\text { Const }\end{aligned}</script><img src="/2020/06/04/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/2020-06-04-11-47-21.png" alt><br><img src="/2020/06/04/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/2020-06-04-11-50-15.png" alt></li><li>Parametric approximation<ul><li>motivation:<br><img src="/2020/06/04/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/2020-06-04-11-53-55.png" alt></li><li>method<br><img src="/2020/06/04/%E5%8F%98%E5%88%86%E6%8E%A8%E6%96%AD/2020-06-04-11-55-00.png" alt></li></ul></li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数学原理 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>会议论文</title>
+      <link href="/2020/06/03/%E4%BC%9A%E8%AE%AE%E8%AE%BA%E6%96%87/"/>
+      <url>/2020/06/03/%E4%BC%9A%E8%AE%AE%E8%AE%BA%E6%96%87/</url>
+      
+        <content type="html"><![CDATA[<h2 id="ICML-2020"><a href="#ICML-2020" class="headerlink" title="ICML 2020"></a>ICML 2020</h2><ul><li><a href="https://icml.cc/Conferences/2020/AcceptedPapersInitial" target="_blank" rel="noopener">AcceptPaper list</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 会议相关 </tag>
+            
+            <tag> 资源搜索 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>基本环境</title>
+      <link href="/2020/06/02/%E5%9F%BA%E6%9C%AC%E7%8E%AF%E5%A2%83/"/>
+      <url>/2020/06/02/%E5%9F%BA%E6%9C%AC%E7%8E%AF%E5%A2%83/</url>
+      
+        <content type="html"><![CDATA[<h2 id="zsh配置"><a href="#zsh配置" class="headerlink" title="zsh配置"></a>zsh配置</h2><ul><li><a href="https://zhuanlan.zhihu.com/p/103742610" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/103742610</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 环境搭建 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 实验环境 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>软件下载安装</title>
+      <link href="/2020/06/02/%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85/"/>
+      <url>/2020/06/02/%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85/</url>
+      
+        <content type="html"><![CDATA[<h2 id="加速"><a href="#加速" class="headerlink" title="加速"></a>加速</h2><h3 id="pip和conda换源"><a href="#pip和conda换源" class="headerlink" title="pip和conda换源"></a>pip和conda换源</h3><ul><li><a href="https://blog.csdn.net/weixin_43718675/article/details/105379053" target="_blank" rel="noopener">https://blog.csdn.net/weixin_43718675/article/details/105379053</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 环境搭建 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 实验环境 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>jupyter lab 搭建</title>
+      <link href="/2020/06/02/jupyter%20lab%20%E6%90%AD%E5%BB%BA/"/>
+      <url>/2020/06/02/jupyter%20lab%20%E6%90%AD%E5%BB%BA/</url>
+      
+        <content type="html"><![CDATA[<h2 id="Jupyter-Lab搭建"><a href="#Jupyter-Lab搭建" class="headerlink" title="Jupyter Lab搭建"></a>Jupyter Lab搭建</h2><h3 id="基本安装"><a href="#基本安装" class="headerlink" title="基本安装"></a>基本安装</h3><ul><li>链接：<a href="https://www.shangmayuan.com/a/ec4b0ec7fe904143bbd011eb.html" target="_blank" rel="noopener">https://www.shangmayuan.com/a/ec4b0ec7fe904143bbd011eb.html</a></li></ul><h3 id="远程访问"><a href="#远程访问" class="headerlink" title="远程访问"></a>远程访问</h3><ul><li>链接：<a href="https://blog.csdn.net/qixizhuang/article/details/82793442" target="_blank" rel="noopener">https://blog.csdn.net/qixizhuang/article/details/82793442</a></li></ul><h3 id="添加kernal"><a href="#添加kernal" class="headerlink" title="添加kernal"></a>添加kernal</h3><ul><li>链接：<a href="https://juejin.im/post/5db5d0a76fb9a0204875ebb9" target="_blank" rel="noopener">https://juejin.im/post/5db5d0a76fb9a0204875ebb9</a></li></ul><h3 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h3><ul><li>链接：<a href="https://zhuanlan.zhihu.com/p/101070029" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/101070029</a></li><li>需要安装nodejs:<a href="https://ywnz.com/linuxjc/4885.html" target="_blank" rel="noopener">https://ywnz.com/linuxjc/4885.html</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 环境搭建 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 实验环境 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>阅读工具</title>
+      <link href="/2020/06/01/%E9%98%85%E8%AF%BB%E5%B7%A5%E5%85%B7/"/>
+      <url>/2020/06/01/%E9%98%85%E8%AF%BB%E5%B7%A5%E5%85%B7/</url>
+      
+        <content type="html"><![CDATA[<ul><li><a href="http://tongtianta.site/" target="_blank" rel="noopener">通天塔</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工具 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 论文阅读 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>程序员工具</title>
+      <link href="/2020/06/01/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%B7%A5%E5%85%B7/"/>
+      <url>/2020/06/01/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%B7%A5%E5%85%B7/</url>
+      
+        <content type="html"><![CDATA[<p>主要摘自知乎问题 <a href="https://www.zhihu.com/question/20783828?sort=created" target="_blank" rel="noopener">程序员必备的好网站有哪些？</a></p><h2 id="学习与工作"><a href="#学习与工作" class="headerlink" title="学习与工作"></a>学习与工作</h2><ul><li>算法学习 LintCode：<a href="https://www.lintcode.com/" target="_blank" rel="noopener">https://www.lintcode.com/</a></li><li>算法学习 LeetCode 中文站：<a href="https://lingkou.com/" target="_blank" rel="noopener">https://lingkou.com/</a></li><li>牛客网 — 面经和刷面试题：<a href="https://www.nowcoder.com" target="_blank" rel="noopener">https://www.nowcoder.com</a></li><li>程序员客栈：<a href="https://www.proginn.com" target="_blank" rel="noopener">https://www.proginn.com</a><ul><li>程序员客栈是领先的程序员自由工作平台，如果你是有经验有资质的开发者，都可以来上面注册成为开发者，业余的时候做点项目，赚点零花钱</li></ul></li><li>应届生求职网：<a href="http://s.yingjiesheng.com/" target="_blank" rel="noopener">http://s.yingjiesheng.com/</a></li><li>数据结构算法可视化：<a href="https://visualgo.net/zh" target="_blank" rel="noopener">https://visualgo.net/zh</a></li></ul><h2 id="搜索工具"><a href="#搜索工具" class="headerlink" title="搜索工具"></a>搜索工具</h2><ul><li><a href="https://www.xiaobaipan.com" target="_blank" rel="noopener">小白盘</a></li><li><a href="gitlogs.com/">gitlogs</a></li></ul><h2 id="前端设计"><a href="#前端设计" class="headerlink" title="前端设计"></a>前端设计</h2><ul><li><a href="https://css-tricks.com" target="_blank" rel="noopener">CSS-tricks</a></li><li><a href="https://codepen.io/" target="_blank" rel="noopener">https://codepen.io/</a></li><li><a href="https://techbrood.com/" target="_blank" rel="noopener">踏得网</a></li></ul><h2 id="图片处理"><a href="#图片处理" class="headerlink" title="图片处理"></a>图片处理</h2><ul><li><a href="http://waifu2x.udp.jp/index.zh-CN.html" target="_blank" rel="noopener">waifu2x无损放大图片</a></li><li><a href="https://www.remove.bg/zh" target="_blank" rel="noopener">照片抠图和换底色</a></li><li><a href="tinypng.com/">无损画质压缩</a></li><li><a href="smartresize.com/zh-cn">批量裁剪缩放图片</a></li><li><a href="https://carbon.now.sh/" target="_blank" rel="noopener">代码美化</a></li></ul><h2 id="高清图片"><a href="#高清图片" class="headerlink" title="高清图片"></a>高清图片</h2><ul><li>Pexels ：<a href="https://www.pexels.com/zh-cn/" target="_blank" rel="noopener">https://www.pexels.com/zh-cn/</a></li><li>Picjumbo ：<a href="https://picjumbo.com/" target="_blank" rel="noopener">https://picjumbo.com/</a></li><li>Magdeleine ：<a href="https://magdeleine.co/" target="_blank" rel="noopener">https://magdeleine.co/</a></li><li>Pixabay：<a href="https://pixabay.com/" target="_blank" rel="noopener">https://pixabay.com/</a></li><li>Ssyer：<a href="https://www.ssyer.com/home" target="_blank" rel="noopener">https://www.ssyer.com/home</a></li><li>Lifeofpix ：<a href="https://www.lifeofpix.com/" target="_blank" rel="noopener">https://www.lifeofpix.com/</a></li></ul><h2 id="文件处理"><a href="#文件处理" class="headerlink" title="文件处理"></a>文件处理</h2><ul><li><a href="easypdf.com/cn">easypdf</a></li></ul><h2 id="综合"><a href="#综合" class="headerlink" title="综合"></a>综合</h2><ul><li><a href="http://www.bewindoweb.com/dwg.php" target="_blank" rel="noopener">程序员必备网站</a></li><li><a href="https://www.toolnb.com/" target="_blank" rel="noopener">爱资料工具</a></li><li><a href="https://start.me" target="_blank" rel="noopener">书签管理</a></li><li><a href="https://free.com.tw" target="_blank" rel="noopener">免费资源网络社区</a></li></ul><h2 id="官方网站"><a href="#官方网站" class="headerlink" title="官方网站"></a>官方网站</h2><ul><li><a href="https://github.com/blog" target="_blank" rel="noopener">https://github.com/blog</a></li><li>Facebook Code <a href="https://code.facebook.com" target="_blank" rel="noopener">https://code.facebook.com</a></li><li>Amazon Developer Blogs：<a href="https://developer.amazon.com" target="_blank" rel="noopener">https://developer.amazon.com</a></li><li>Google Developers Blog：<a href="http://developers.googleblog.com" target="_blank" rel="noopener">http://developers.googleblog.com</a></li><li>atom: <a href="http://blog.atom.io" target="_blank" rel="noopener">http://blog.atom.io</a></li><li>GitHub Engineering：<a href="https://githubengineering.com" target="_blank" rel="noopener">https://githubengineering.com</a></li><li>Dropbox Tech Blog：<a href="https://dropboxtechblog.wordpress.com" target="_blank" rel="noopener">https://dropboxtechblog.wordpress.com</a></li><li>Increment：<a href="https://increment.com" target="_blank" rel="noopener">https://increment.com</a></li><li>Uber Engineering Blog：<a href="https://eng.uber.com" target="_blank" rel="noopener">https://eng.uber.com</a></li><li>Docker Blog：<a href="https://blog.docker.com" target="_blank" rel="noopener">https://blog.docker.com</a></li><li>The npm Blog：<a href="http://blog.npmjs.org" target="_blank" rel="noopener">http://blog.npmjs.org</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 工具 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 没事逛逛 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>写作工具</title>
+      <link href="/2020/06/01/%E5%86%99%E4%BD%9C%E5%B7%A5%E5%85%B7/"/>
+      <url>/2020/06/01/%E5%86%99%E4%BD%9C%E5%B7%A5%E5%85%B7/</url>
+      
+        <content type="html"><![CDATA[<ul><li><p>近义词查询</p><ul><li><a href>Thesaurus</a></li><li><a href>Semantic Domains</a></li></ul></li><li><p>短语搭配</p><ul><li><a href>Academic Phrasebank</a><ul><li>提供在学术报告中经常会用到的语句的范例，根据左侧的菜单栏就能根据不同需要找到相对应的短语</li></ul></li><li><a href>Ludwig</a><ul><li>把你不确定的短语或者句子输进去，它就会帮助你检索看看这些专业的英语文章里有没有使用过这样的表达方法</li></ul></li><li><a href>Linggle</a><ul><li>Linggle是一个专门帮你找到正确搭配的网站。它的主页上就介绍了好几种方法：用星号和下划线查介词，用问号来判断介词是否多余，用斜杠来判断介词二选一选哪个（如 in/at the afternoon)。除了介词，还可以查找其他词性的词的精准搭配：比如输入V. death penalty, 它就能显示一些在这个词组之前使用的常用动词</li></ul></li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+          <category> 工具 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 论文写作 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>代码收集</title>
+      <link href="/2020/06/01/%E4%BB%A3%E7%A0%81%E6%94%B6%E9%9B%86/"/>
+      <url>/2020/06/01/%E4%BB%A3%E7%A0%81%E6%94%B6%E9%9B%86/</url>
+      
+        <content type="html"><![CDATA[<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><ul><li><p><a href="https://github.com/dnddnjs/pytorch-cifar10" target="_blank" rel="noopener">https://github.com/dnddnjs/pytorch-cifar10</a></p><p>  <img src="/2020/06/01/%E4%BB%A3%E7%A0%81%E6%94%B6%E9%9B%86/2020-06-01-23-22-02.png" alt></p></li></ul><h2 id="知识蒸馏"><a href="#知识蒸馏" class="headerlink" title="知识蒸馏"></a>知识蒸馏</h2><ul><li><a href="https://github.com/peterliht/knowledge-distillation-pytorch" target="_blank" rel="noopener">https://github.com/peterliht/knowledge-distillation-pytorch</a><ul><li>老，不更新</li></ul></li><li><a href="https://github.com/dkozlov/awesome-knowledge-distillation" target="_blank" rel="noopener">https://github.com/dkozlov/awesome-knowledge-distillation</a><ul><li>持续更新</li></ul></li></ul><h2 id="数据增广"><a href="#数据增广" class="headerlink" title="数据增广"></a>数据增广</h2><ul><li><a href="https://github.com/tensorflow/models/tree/master/research/autoaugment" target="_blank" rel="noopener">https://github.com/tensorflow/models/tree/master/research/autoaugment</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 资源搜索 </tag>
+            
+            <tag> 代码 </tag>
+            
+            <tag> 没事逛逛 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课程、书本</title>
+      <link href="/2020/06/01/%E8%AF%BE%E7%A8%8B%E3%80%81%E4%B9%A6%E6%9C%AC/"/>
+      <url>/2020/06/01/%E8%AF%BE%E7%A8%8B%E3%80%81%E4%B9%A6%E6%9C%AC/</url>
+      
+        <content type="html"><![CDATA[<h1 id="深度学习"><a href="#深度学习" class="headerlink" title="深度学习"></a>深度学习</h1><ul><li><a href="http://deeplearning.net/" target="_blank" rel="noopener">deeplearning.net</a>：深度学习理论</li><li><a href="http://www.deeplearningbook.org/" target="_blank" rel="noopener">深度学习：花书</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 资源搜索 </tag>
+            
+            <tag> 没事逛逛 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>处理方法</title>
+      <link href="/2020/06/01/%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/"/>
+      <url>/2020/06/01/%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-样本处理"><a href="#1-样本处理" class="headerlink" title="1. 样本处理"></a>1. 样本处理</h2><ul><li>Learning to Reweight Examples for Robust Deep Learning<ul><li>[ ] <a href="https://www.colabug.com/2018/0530/2976315/" target="_blank" rel="noopener">https://www.colabug.com/2018/0530/2976315/</a></li></ul></li></ul><h2 id="2-可视化处理"><a href="#2-可视化处理" class="headerlink" title="2. 可视化处理"></a>2. 可视化处理</h2><ul><li><a href="https://github.com/utkuozbulak/pytorch-cnn-visualizations" target="_blank" rel="noopener">https://github.com/utkuozbulak/pytorch-cnn-visualizations</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 没事逛逛 </tag>
+            
+            <tag> Idea </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>博客、主页 、分享、资料</title>
+      <link href="/2020/06/01/%E5%8D%9A%E5%AE%A2%E3%80%81%E4%B8%BB%E9%A1%B5%20%E3%80%81%E5%88%86%E4%BA%AB%E3%80%81%E8%B5%84%E6%96%99/"/>
+      <url>/2020/06/01/%E5%8D%9A%E5%AE%A2%E3%80%81%E4%B8%BB%E9%A1%B5%20%E3%80%81%E5%88%86%E4%BA%AB%E3%80%81%E8%B5%84%E6%96%99/</url>
+      
+        <content type="html"><![CDATA[<h2 id="AI社区"><a href="#AI社区" class="headerlink" title="AI社区"></a>AI社区</h2><ul><li><a href="http://bbs.cvmart.net/" target="_blank" rel="noopener">极市开发者社区</a></li><li><a href="https://distill.pub/" target="_blank" rel="noopener">distill</a></li><li><a href="gitlogs.com/">gitlogs</a></li></ul><h2 id="比赛"><a href="#比赛" class="headerlink" title="比赛"></a>比赛</h2><ul><li><a href="https://www.biendata.com/" target="_blank" rel="noopener">https://www.biendata.com/</a></li></ul><h2 id="投稿、交流"><a href="#投稿、交流" class="headerlink" title="投稿、交流"></a>投稿、交流</h2><ul><li><a href="http://muchong.com/journal.php?tag=%C4%A3%CA%BD%CA%B6%B1%F0" target="_blank" rel="noopener">小木虫</a></li></ul><h2 id="网站入口"><a href="#网站入口" class="headerlink" title="网站入口"></a>网站入口</h2><ul><li><a href="http://www.bewindoweb.com/dwg.php" target="_blank" rel="noopener">程序员必备网站</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 资源搜索 </tag>
+            
+            <tag> 没事逛逛 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>可视化工具</title>
+      <link href="/2020/06/01/%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7/"/>
+      <url>/2020/06/01/%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%A5%E5%85%B7/</url>
+      
+        <content type="html"><![CDATA[<h1 id="模型可视化"><a href="#模型可视化" class="headerlink" title="模型可视化"></a>模型可视化</h1><ul><li>manim 和 dair.ai <ul><li><a href="https://bbs.cvmart.net/topics/2367" target="_blank" rel="noopener">https://bbs.cvmart.net/topics/2367</a></li><li>manim 是一个解释性数学动画引擎。它由格兰特 · 桑德森撰写，并通过他的 YouTube 频道3Blue1Brown 流行开来。</li></ul></li></ul><h1 id="NN可视化"><a href="#NN可视化" class="headerlink" title="NN可视化"></a>NN可视化</h1><ul><li><a href="https://github.com/utkuozbulak/pytorch-cnn-visualizations" target="_blank" rel="noopener">https://github.com/utkuozbulak/pytorch-cnn-visualizations</a><ul><li>持续更新中，工作很多</li></ul></li><li><a href="https://github.com/yosinski/deep-visualization-toolbox" target="_blank" rel="noopener">https://github.com/yosinski/deep-visualization-toolbox</a><ul><li>有点老</li></ul></li><li><a href="http://playground.tensorflow.org/#" target="_blank" rel="noopener">http://playground.tensorflow.org/#</a><ul><li>简单得神经网络可视化</li></ul></li></ul><h1 id="神经网络结构可视化"><a href="#神经网络结构可视化" class="headerlink" title="神经网络结构可视化"></a>神经网络结构可视化</h1><ul><li><a href="https://blog.csdn.net/qq_27825451/article/details/96856217" target="_blank" rel="noopener">https://blog.csdn.net/qq_27825451/article/details/96856217</a></li><li>需要系统也安装graphviz</li></ul><h1 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h1><ul><li><a href="https://distill.pub/" target="_blank" rel="noopener">distill</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 可视化 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>AI资源</title>
+      <link href="/2020/06/01/AI%E8%B5%84%E6%BA%90/"/>
+      <url>/2020/06/01/AI%E8%B5%84%E6%BA%90/</url>
+      
+        <content type="html"><![CDATA[<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><ul><li>周志华推荐<ul><li>[ ] <a href="https://www.cnblogs.com/souxun2014/p/4138474.html" target="_blank" rel="noopener">https://www.cnblogs.com/souxun2014/p/4138474.html</a></li></ul></li><li>50个咨询网站和博客<ul><li>[ ] <a href="https://baijiahao.baidu.com/s?id=1632836012773773396&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener">https://baijiahao.baidu.com/s?id=1632836012773773396&amp;wfr=spider&amp;for=pc</a></li></ul></li></ul><h3 id="Baseline-SOTA"><a href="#Baseline-SOTA" class="headerlink" title="Baseline SOTA"></a>Baseline SOTA</h3><ul><li><a href="https://www.jiqizhixin.com/sota" target="_blank" rel="noopener">机器之心</a></li><li><a href="https://benchmarks.ai/" target="_blank" rel="noopener">benchmarks</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 资源搜索 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>论文检索</title>
+      <link href="/2020/06/01/%E8%AE%BA%E6%96%87%E6%A3%80%E7%B4%A2/"/>
+      <url>/2020/06/01/%E8%AE%BA%E6%96%87%E6%A3%80%E7%B4%A2/</url>
+      
+        <content type="html"><![CDATA[<h3 id="aitopics"><a href="#aitopics" class="headerlink" title="aitopics"></a><a href="https://aitopics.org/" target="_blank" rel="noopener">aitopics</a></h3><ul><li>A dynamic online library of introductory information about artificial intelligence.</li><li>筛选功能很棒，专注AI领域论文<br><img src="/2020/06/01/%E8%AE%BA%E6%96%87%E6%A3%80%E7%B4%A2/2020-06-01-22-28-15.png" alt></li></ul><h3 id="Semantic-Scholar"><a href="#Semantic-Scholar" class="headerlink" title="Semantic Scholar"></a><a href="https://www.semanticscholar.org/" target="_blank" rel="noopener">Semantic Scholar</a></h3><ul><li>语义学者(Semantic Scholar)是由微软联合创始人 Paul Allen 做的免费学术搜索引擎，其检索结果来自于期刊、学术会议资料或者是学术机构的文献。这个搜索引擎用上了机器学习的技术，希望减少科学家的检索论文的时间。<br><img src="/2020/06/01/%E8%AE%BA%E6%96%87%E6%A3%80%E7%B4%A2/2020-06-01-22-34-58.png" alt></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 资源搜索 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>可逆resnet</title>
+      <link href="/2020/05/31/%E5%8F%AF%E9%80%86resnet/"/>
+      <url>/2020/05/31/%E5%8F%AF%E9%80%86resnet/</url>
+      
+        <content type="html"><![CDATA[<h1 id="可逆ResNet：极致的暴力美学"><a href="#可逆ResNet：极致的暴力美学" class="headerlink" title="可逆ResNet：极致的暴力美学"></a><a href="https://zhuanlan.zhihu.com/p/60479586" target="_blank" rel="noopener">可逆ResNet：极致的暴力美学</a></h1><ul><li>为什么要可逆： 避免坍塌现象<br><img src="/2020/05/31/%E5%8F%AF%E9%80%86resnet/2020-05-31-21-06-56.png" alt></li><li>流模型的基本设计思路：<strong>通过比较巧妙的设计，使得模型每一层的逆变换比较简单，而且雅可比矩阵是一个三角阵，从而雅可比行列式很容易计算。</strong></li><li>流模型的局限：<strong>必须保证逆变换简单和雅可比行列式容易计算，那么每一层的非线性变换能力都很弱，模型也必须堆得很深</strong></li><li>可逆三要素：<ul><li>什么时候可逆？<script type="math/tex; mode=display">y=x+g(x) \triangleq F(x)</script>  可逆的充分必要条件是：<script type="math/tex; mode=display">\operatorname{Lip}(g)<1，其中\operatorname{Lip}(g) \triangleq \max _{x_{1} \neq x_{2}} \frac{\left\|g\left(x_{1}\right)-g\left(x_{2}\right)\right\|_{2}}{\left\|x_{1}-x_{2}\right\|_{2}}</script>  结论：<br>  $\qquad$对模型 g 的所有核权重 W 做谱归一化，然后乘上一个大于 0 小于 1 的系数 c（即$W \leftarrow c W /|W|_{2}$  ），就可以使得 x+g(x) 可逆了。</li><li>逆函数是什么？<ul><li>迭代$x<em>{n+1}=y-g\left(x</em>{n}\right)$至一定的精度</li><li>即求其不动点</li></ul></li><li>雅可比行列式怎么算？<script type="math/tex; mode=display">J_{F} \triangleq \frac{\partial}{\partial x}(x+g(x))=I+\frac{\partial g}{\partial x} \triangleq I+J_{g}$$        $$\ln \left|\operatorname{det}\left(J_{F}\right)\right|=\ln \left|\operatorname{det}\left(I+J_{g}\right)\right| \equiv \ln \operatorname{det}\left(I+J_{g}\right)$$        $$\ln \operatorname{det}\left(I+J_{g}\right)=\operatorname{Tr}\left(\ln \left(I+J_{g}\right)\right)$$        暴力展开：  $$\operatorname{Tr}\left(\ln \left(I+J_{g}\right)\right)=\sum_{n=1}^{N}(-1)^{n-1} \frac{\operatorname{Tr}\left(J_{g}^{n}\right)}{n}+\mathscr{O}\left(\operatorname{lip}(g)^{N}\right)</script>  <img src="/2020/05/31/%E5%8F%AF%E9%80%86resnet/2020-05-31-21-33-36.png" alt></li></ul></li><li>实验结果：<br>  <img src="/2020/05/31/%E5%8F%AF%E9%80%86resnet/2020-05-31-21-36-09.png" alt><br>  <img src="/2020/05/31/%E5%8F%AF%E9%80%86resnet/2020-05-31-21-37-03.png" alt></li><li>评价：<ul><li>让任务更难了，效果比不上原来的，得找应用场景</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数学原理 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>深度学习与数学</title>
+      <link href="/2020/05/31/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%95%B0%E5%AD%A6/"/>
+      <url>/2020/05/31/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%95%B0%E5%AD%A6/</url>
+      
+        <content type="html"><![CDATA[<h2 id="5-31"><a href="#5-31" class="headerlink" title="5.31"></a>5.31</h2><ul><li><a href="https://mp.weixin.qq.com/s?__biz=MzIwMTc4ODE0Mw==&amp;mid=2247492180&amp;idx=1&amp;sn=3ea92a3a9f1306efde89ce1777b80da6&amp;chksm=96ea3dd4a19db4c20dcbc9627b0eb307672b4d61008a93c42814fa6728ca7b6f7c293cff1d80&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">深度学习中的Lipschitz约束：泛化与生成模型</a><ul><li>内容简介：可用在生成模型中，也可以用在一般的监督学习中L约束应用</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数学原理 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>那些年，related work教会我的事情</title>
+      <link href="/2020/05/31/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8Crelated%20work%E6%95%99%E4%BC%9A%E6%88%91%E7%9A%84%E4%BA%8B%E6%83%85/"/>
+      <url>/2020/05/31/%E9%82%A3%E4%BA%9B%E5%B9%B4%EF%BC%8Crelated%20work%E6%95%99%E4%BC%9A%E6%88%91%E7%9A%84%E4%BA%8B%E6%83%85/</url>
+      
+        <content type="html"><![CDATA[<h2 id="CVPR-2020-Dynamic-Hierarchical-Mimicking-Towards-Consistent-Optimization-Objectives"><a href="#CVPR-2020-Dynamic-Hierarchical-Mimicking-Towards-Consistent-Optimization-Objectives" class="headerlink" title="[CVPR 2020] Dynamic Hierarchical Mimicking Towards Consistent Optimization Objectives"></a>[CVPR 2020] <a href="https://arxiv.org/abs/2003.10739" target="_blank" rel="noopener">Dynamic Hierarchical Mimicking Towards Consistent Optimization Objectives</a></h2><ul><li><strong>Auxiliary Supervision</strong><ul><li>中间层加入相关信息</li><li>分类：GoogLeNet and DSN</li><li>其它： address edge detection [40], pose estimation [26], scene<br>parsing [52], semantic segmentation [51] and other visual<br>recognition tasks [21, 48, 25]</li></ul></li><li><strong>Network Regularization</strong><ul><li>解决过拟合问题</li><li>Dropout、MaxOut、DropConnect、DropIn、DropBlock、Batch Normalization、Stochastic Depth、 Drop Path</li></ul></li><li><strong>Knowledge Transfer</strong><ul><li>Dark Knowledge Distillation、knowledge distillation、Deep Mutual Learning、DHM（solve the inherent deficiency hidden<br>in the deeply-supervised training procedure）</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 论文阅读 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>写作语句收集</title>
+      <link href="/2020/05/31/%E5%86%99%E4%BD%9C%E8%AF%AD%E5%8F%A5%E6%94%B6%E9%9B%86/"/>
+      <url>/2020/05/31/%E5%86%99%E4%BD%9C%E8%AF%AD%E5%8F%A5%E6%94%B6%E9%9B%86/</url>
+      
+        <content type="html"><![CDATA[<h2 id="5-31"><a href="#5-31" class="headerlink" title="5.31"></a>5.31</h2><ul><li>The advent of AlexNet that achieved groundbreaking results in the ImageNet Large Scale Visual Recognition Challenge 2012 <strong>ignites the resurgence of deep CNN architectures</strong></li><li>The aforementioned nuisances motivate us to ease the CNN model training </li><li>One promising line of exploration lays emphasis on the intermediate feature representation and hidden layer supervision.</li><li>contemporary work</li><li>Analogously</li><li>we blame the barrier to improving model generalization ability and accuracy on the insufficient collaboration of recognition knowledge extracted from<br>diverse stage</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 论文写作 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>论文阅读--Dynamic Hierarchical Mimicking Towards Consistent Optimization Objectives</title>
+      <link href="/2020/05/31/Dynamic%20Hierarchical%20Mimicking%20Towards%20Consistent%20Optimization%20Objectives/"/>
+      <url>/2020/05/31/Dynamic%20Hierarchical%20Mimicking%20Towards%20Consistent%20Optimization%20Objectives/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Dynamic-Hierarchical-Mimicking-Towards-Consistent-Optimization-Objectives"><a href="#Dynamic-Hierarchical-Mimicking-Towards-Consistent-Optimization-Objectives" class="headerlink" title="Dynamic Hierarchical Mimicking Towards Consistent Optimization Objectives"></a>Dynamic Hierarchical Mimicking Towards Consistent Optimization Objectives</h1><p>[CVPR 2020] <a href="https://arxiv.org/abs/2003.10739" target="_blank" rel="noopener">Dynamic Hierarchical Mimicking Towards Consistent Optimization Objectives</a><br>github:<a href="https://github.com/d-li14/DHM" target="_blank" rel="noopener">https://github.com/d-li14/DHM</a></p><ul><li><p>Motivation</p><ul><li>DSN(Seminal Deeply-Supervised Networks)<ul><li>缓解梯度流通过长链带来的优化困难</li><li>但是，它仍然容易受到包括层次表示生成过程的干扰和优化目标不一致等问题的影响。Motivation</li></ul></li><li>DHM<ul><li>从给定神经网络的中间层中，巧妙的设置边界分支。这些分支可以在主干的某些位置动态地出现，不仅保留了骨干网络的特征表达能力，还可以沿着自己的路径产生更多的多样化表示。</li><li>通过一个带有概率预测匹配损失的优化公式，促进不同分支之间的多级交互，从而保证了更稳健的优化过程和更好的表示能力。</li></ul></li></ul></li><li><p>Related work（lays emphasis on the intermediate feature representation and hidden layer supervision）</p><ul><li>inception 系列的网络：可以看成不同级别的网络的监督信息组合</li><li>DSN 网络：提出DSN模型，在每层卷积后增加 监督信息， 每层的特征通过一个分类器，得到分类结果，用于每层的学习。<ul><li><a href="https://zhuanlan.zhihu.com/p/49492520" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/49492520</a></li><li>理念： 如果features越discrminative, 那么classifier的性能就越好 。</li><li>关注点:<br>  （1）影响中间层的透明度具有整体分类;<br>（2）学习特征的辨别力和稳健性，特别是在早期阶段;<br>（3）面对消失的“梯度”训练有效性。</li><li>损失函数：<script type="math/tex; mode=display">\left\|\mathbf{w}^{(o u t)}\right\|^{2}+\mathcal{L}\left(\mathrm{W}, \mathbf{w}^{(o u t)}\right)+\sum_{m=1}^{M-1} \alpha_{m}\left[\left\|\mathbf{w}^{(m)}\right\|^{2}+\ell\left(\mathrm{W}, \mathbf{w}^{(m)}\right)-\gamma\right]_{+}</script>其中，$\mathcal{L}$和$\ell$为SVM损失函数，</li><li>衰减系数：<script type="math/tex; mode=display">\alpha_{m}=\alpha_{m} * 0.1 *(1-t / N)</script>即迭代一定次数后，中间层的损失就变得没那么重要了。</li></ul></li><li>MSDnet:<br><a href="https://blog.csdn.net/u014686356/article/details/79626471" target="_blank" rel="noopener">https://blog.csdn.net/u014686356/article/details/79626471</a><ul><li>思想<ul><li>在给定的计算资源下，对于一部分的图像的分类。这部分图像里面既“easy”图像也有“difficult”的图像。可以采用一个很简单的思想，就是对于easy图像的分类可以提早结束。比如在神经网络的前几层的特征中，分类器已经可以以一个较高的置信度将图形的分类结果输出了，那么就可以直接将结果作为模型的输出，而不用继续在卷积神经网络里面进行传递了。那么如何确定模型对于图像的分类是可靠的呢？这就是看softmax后，概率最大值是否超过一个阈值（或者第一大与第二大值的差），例如softmax结果是（0.99,0.01,0),那么就认为分类对这个图形的分类结果具有较高的confidence，是easy图像。对difficult的图像会继续在网络中传递，直到超过阈值或者到网络的最后一层。</li><li>可以想象到的是办法是，在卷积神经网络的每一层上面添加一个分类器，将当前层的feature map 作为图像的representation，输入到分类器中进行分类，那么当在某个时间点，需要输出模型的结果时，就可以把最近的分类的结果作为输出。而且在条件2下，也可以将easy图像的结果尽早的输出。但是直接简单的添加分类的做法，对于分类器的分类效果是有影响的。</li></ul></li></ul></li><li><p>问题：</p><ul><li>浅层次的分类不能获取图像的高层语义特征<br>  solution：多尺度的特征<br>  MSDNet采用了多个尺度来获取图形的抽象特征，分为两个部分的串联。1.上层同尺度的特征的卷积。2.上层上个尺度feature map的降采样（diagonal connection）。这样可以对同层的分类器得到一个更好的分类结果。通过上图也可以看出来，同层次的分类器的相对精度都要高</li><li>浅层次的分类器对于后面图形分类的精度的影响<br>  solution：Dense connection<br>  这样的结构可以保证网络的final performance，因为每层都有到其他层次的连接。那么反向传播的时候，每个分类都可以通过shortcut 对某一层的产生直接的影响，让权重向对每个分类效果更好的方向更新。<br><img src="/2020/05/31/Dynamic%20Hierarchical%20Mimicking%20Towards%20Consistent%20Optimization%20Objectives/2020-05-31-19-04-24.png" alt></li></ul></li><li><p>相关知识：</p><ul><li><strong>Auxiliary Supervision</strong></li><li><strong>Network Regularization</strong></li><li><strong>Knowledge Transfer</strong></li></ul></li></ul></li><li>Approach<ul><li>Deep Supervision及其问题所在<ul><li>损失函数：即在中间层引入监督信息<br> <img src="/2020/05/31/Dynamic%20Hierarchical%20Mimicking%20Towards%20Consistent%20Optimization%20Objectives/2020-05-31-18-48-42.png" alt> </li><li>问题：<ul><li>扰乱网络学习得到的层级信息</li></ul></li><li>之前的解决方案改进不大<ul><li>google net： only attaches auxiliary towers to the endpoints of two relatively deep intermediate Inception blocks</li><li>MSDnet ：introduces horizontal and vertical connections, maintaining coarse-level information in the earlier layers and improving feature discrimination simultaneously</li></ul></li></ul></li></ul></li><li>核心观点：the more indepth concern, which has been rarely explored in the related works is the lack of essentially comprehensive interactions among the predication outputs<br>from the auxiliary classifiers and the top-most classifier of the network.</li><li><p>损失函数：<br><img src="/2020/05/31/Dynamic%20Hierarchical%20Mimicking%20Towards%20Consistent%20Optimization%20Objectives/2020-05-31-19-19-01.png" alt></p><ul><li>第一项是正常损失函数</li><li>第二项是辅助网络的损失函数<script type="math/tex; mode=display">\begin{aligned}\mathcal{L}_{s}\left(\mathcal{W}_{\tilde{\Phi}} ; I_{\Phi}, \mathcal{D}\right)=&-\frac{1}{N} \sum_{i=1}^{N} \sum_{l=1}^{L-1}\left[I_{\Phi}(l) \lambda_{l}\right.\\&\left.\log f_{s}^{l}\left(\boldsymbol{W}_{m}^{l}, \boldsymbol{W}_{s}^{l} ; \boldsymbol{x}_{i}\right)^{\left(y_{i}\right)}\right]\end{aligned}</script></li><li>第三项要求不同支路上的输出要尽可能相关<script type="math/tex; mode=display">\begin{array}{l}\mathcal{L}_{k}\left(\mathcal{W}_{\tilde{\Phi}} ; I_{\Phi}, \mathcal{D}\right)=-\frac{1}{N} \sum_{i=1}^{N} \sum_{p=1}^{L-1} \sum_{q=1}^{L-1}\left[I_{\Phi}(p) I_{\Phi}(q) \mu_{p q}\right. \\\left.\left.\sum_{k=1}^{K} f_{s}^{p}\left(\boldsymbol{W}_{m}^{p}, \boldsymbol{W}_{s}^{p} ; \boldsymbol{x}_{i}\right)^{(k)} \log f_{s}^{q}\left(\boldsymbol{W}_{m}^{q}, \boldsymbol{W}_{s}^{q} ; \boldsymbol{x}_{i}\right)\right)^{(k)}\right]\end{array}</script></li></ul></li><li><p>理论解释：</p><ul><li>概述： the proposed mechanism behaves as a strong regularizer and improves model generalization ability<script type="math/tex; mode=display">\begin{aligned}{-\mathbb{E}_{\boldsymbol{\xi}}\left(\boldsymbol{\phi}_{2}^{(k)}(\boldsymbol{\theta}+\boldsymbol{\xi}) \log \phi_{1}^{(k)}(\boldsymbol{\theta}+\boldsymbol{\xi})\right)} \\\approx -\boldsymbol{\phi}_{2}^{(k)}(\boldsymbol{\theta}) \log \phi_{1}^{(k)}(\boldsymbol{\theta})-\sigma^{2} \frac{\nabla_{\boldsymbol{\theta}} \phi_{2}^{(k)}(\boldsymbol{\theta}) \nabla_{\boldsymbol{\theta}} \phi_{1}^{(k)}(\boldsymbol{\theta})}{\phi_{1}^{(k)}(\boldsymbol{\theta})}\end{aligned}</script>证明过程：<br><img src="/2020/05/31/Dynamic%20Hierarchical%20Mimicking%20Towards%20Consistent%20Optimization%20Objectives/2020-05-31-19-44-12.png" alt></li></ul></li><li><p>这一个噪声项引入得有点神奇，原文论述说是惩罚其不一致的梯度方向，<br><img src="/2020/05/31/Dynamic%20Hierarchical%20Mimicking%20Towards%20Consistent%20Optimization%20Objectives/2020-05-31-19-52-46.png" alt></p></li><li><p>实验结果：</p><ul><li>cifar<br><img src="/2020/05/31/Dynamic%20Hierarchical%20Mimicking%20Towards%20Consistent%20Optimization%20Objectives/2020-05-31-19-59-59.png" alt></li><li>imagenet<br><img src="/2020/05/31/Dynamic%20Hierarchical%20Mimicking%20Towards%20Consistent%20Optimization%20Objectives/2020-05-31-20-00-45.png" alt></li><li>DukeMTMC-reID datasets<br><img src="/2020/05/31/Dynamic%20Hierarchical%20Mimicking%20Towards%20Consistent%20Optimization%20Objectives/2020-05-31-20-01-55.png" alt></li></ul></li><li><p>代码：</p><ul><li><a href="https://github.com/d-li14/DHM" target="_blank" rel="noopener">https://github.com/d-li14/DHM</a></li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 论文阅读 </tag>
+            
+            <tag> 深度监督 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>5月科研日志</title>
+      <link href="/2020/05/31/5%E6%9C%88%E7%A7%91%E7%A0%94%E6%97%A5%E5%BF%97/"/>
+      <url>/2020/05/31/5%E6%9C%88%E7%A7%91%E7%A0%94%E6%97%A5%E5%BF%97/</url>
+      
+        <content type="html"><![CDATA[<div id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">  <div class="hbe-input-container">  <input type="password" id="hbePass" placeholder="" />    <label for="hbePass">Please enter the password to read.</label>    <div class="bottom-line"></div>  </div>  <script id="hbeData" type="hbeData" data-hmacdigest="5e36f042564814dab9d6068f2f707a0052dff43b95b8ad9e6ee02472c2957b5f">227b5053faddc76e4c9e716df9bc73ea0c186592f201ff6571ae9859b38ab988a05eefb68c0e62aa416bb353dea7374199345872bde9333bd7222b402e242eada9a4ea64500e930e5ce94c112c42aac5ea26e6ff098d5fbe4545698da074afb31eb63ba77f931a510289b770e1cb2122775448a49deba618e474f8f48e242b93d1bd2ca596c7c9ef0c208c6e28eb7f10b249d4916c9025451c33f00c5ab4274d306ec9ef94845b3f49fcab4c147104e070730f89efba2e06f492d94b4c1ebdb0ce80ca11fa0e478d1c716c61a30e4e5a0310aed387e21349640fbc838fe8839e1c7408ed44f566a7ee2f8b85fb3c55f862090eccc67fe3fa4f37c0d54bc02764d01812ac8462f12ffe109e940f960c5064a4c8d8c464eb1002d55a115881a5174c235936eb43259bacc11ae6a4590a6ded25ce3f0f77d68086a3c1cbe6c2257a3a14bb47cdaf6ee863c3feafdbdb794ca33c425fd5d68a758a20941d88d9e1eee48dd4bf815a36d659b62e2b512f3cf6e74b1015599c5d7bc8369788a5a3f85c23b7a38ccb51920ef3bb0f387572be2c9c7fb9cb3a8519d774bcc361ae9659187c8d0edb14f3b3cff56935499e3d19887cea2dcd6cbab5196d84723745549ed95ff33b5c02bb353dc52fffe0461f3b143e2d0f434d3df526bade37774dc80bbb6083cc1ce04aa0e25ee4926a105bfa9bece560502c2ea6aecee1ee2ee934d9734c883594e541d6862c27ee89809964b251e4ad64489ef41044f64d868cd9653b0a7f5cd51ae5ce9811ab822616fc243c4267b4c13f0dcaca536d4e6f1360944f2782f166a1b92fa96333071993cdad73b86ae51c15c770b86e39295d6fe3a883daeb4b6a5c5b14ac9458e87a6b061d4cd0c261560aeea25f5d6ceb6d62e0e0f400d8c83ab35df9546301d2b672893372f85abcdcbfb8e301d5dd51e7afc1b3476d7f481fe9e692e3ea9af5fbda598ba626f1e52d58b4fe02256e74e3879574f9e14695c8c88c1da40f8b50b4a6f7659e201a195faedacce3afbeea3e8da96a23ec83eea96eb8db5c8e381c3ae20b8458a9e834f4765e844eab70ea8af2abd34c63f733ef7838fb3f610d28e803b8a087f07e6c433f5e354bfde6a94e2d383405c2e517c5aa70067dfe504b0e68f8ba39fdb711e806510b4da125bbf5793216d7180d4f9fdedfdeaaddb70be782d9305994a139ff788cadccab7375dd029ea8e29fe3ca21ea2ad3764dfe3a658a861e2079a1a0d6942eb7f825332243b9d873dbe3d31f7afd586d185631192298139d02ad89780040218ab6058bb0cccb6e47b981039756b5d660ce20f3b5b8deca956d2d6a2518f0e7c8871b9e98ca9b674069b0a99698767b24e4bc786fcf4aab4c73f58aeba293b952f7563c3b5e4a145d4ca1563f30865366e11018c49c51b54f07e94fc553e0a1df54ddb659e2ce780ab334e9bc0b089d87523e9b94d3697889be69e1f95c25021cb083b67b63a0bb79504d4135155ffba2b9a81c4fd200529212b8823115413110268a36124d7b2ae06716d4aa2904e48cf91a10b7a2f60e6b2d7568dcbbf46408685d80d5af37336fc33ecbd1ac2b4993ee650f445f93ff61f1f355bb4797a9f6c66d5bd823e66aedd65e4829aa36de5ce962798db9bf2e20f9bf9e7e79b1d9cdd3512885d02e89baff57b47c77c43681721e50237bccbd7912300fced2183e082eaa71724dcaab3a652298ed59ddd93b5b137036c603886e96dbe7591432822724a5e21c5c9461c7a1b22feb3008c8ecd8343cdca51ec5e7f95d01491f30f3160b99cbf86ef4c31b8623e74be4c90ff2bdebed663b0d30e659ae7171f7a6491cfe1b757d4b37ce963a6db906e07a0bdd5565313c409dbc99c1375b37876297273da29fb11fdab3c2b9982e8240a61fa492c9642fc9434c294d4eedcc575eb03efbab04e415118b2660f16bc6a79dde36992f9822d6cd35e48b0958cd679a96877e858dfdb533ac47d2c0f948d90928985b7217023ab9992f4c6fcbce7f39aeed94b3e09633c1b84852392ae5c92728760a2945921226da27053ae7a409c2fbb99212da23ae62dc5c11858652ca7881e7076e190d924f2c8a8e9d3c3a9344c79b8bd52a11aac557ed8c4fd45ee39a20d3c91f9719897508e570799d45c1a77cd8912cf264fb47a1d3abedee47d1d3028a19855b4169d438bec005c884518a6ffdf447ec5c8bd84b4c41877e90a3097e2a0af67ca3c530ed8c5f9035d279df71b379bb67fa19e1dca3a63e5dcfa778bad024bce16b29294f55e97bc62ea938f25b728b162d1f11ce016f9164f50008ef58926a1150d929a9db7850d62b810c62d3c5f5565486903927f135fcafb5ab4dce156bae8314a52002d354c6d77fbb02f8afd75fdde26928990fcd3957376d55e81591d17babb7c2bbb1a152ec861ff5fb0a3ceefaa3da453d82fa9aed990fc0bd54d1469982642ae71fa061ded1c822375bc81e9e47d054345ac2e9a3cd7d5ec2221df3982b01e36c4e385b00292f4ac249a82838718e969e91d5cb33bd04a676c7b64a3e5c4bafb4b3fcd171cba11fc8b13a306c375dc7ca5e0e3412ddc3d07bdeddcd9da52348ddb5305437b562156feab2be15e41187323d6187fd497e0dd89e30365ca973f91ecdae41822ea76971475244fa24e710ea1e65998e85c7763ac53ec2436017b8abc7c11d47c71c13d5b299a1e139fea66beb9067bf489ac5b49508c26117f4562397dceb6de337dfe4023f20a1f271e834c8b3e83d3a536350f9800da6dd33b827570fc6f7a306f12df27159d1989bfdb4ede5cce2396f7a66fc6a47b49cbdf8e72f8c195f8f05679b975b624b2588345b78e824ad562171bc904a74ae1b821a949c2767c126a207e7f45376951208037753046cab741a5599ac2ec4be9759423c85e1e341fb1cf7c643044427e220ec1165243f3aa2c89ad082cc0d7e9efc438ee954d4d4fdaab65ebfaaa3a4f56e3679fc844fa5ec9349c32f9daab8929c98c622bd401dd5c04138e3899da57f432580a208abd9cc4bc26d2f9cfe87ddf66b4b8f70906db685f200eaf0447635d3ee239bb6676daa4e75b3bd2b1b9e8f485d33ecda8e73a61e53095d06607f1aa6923e183bb93b8523642201f6d659c6f048fd7446b99ba02570614ffa62e6bd656cdabaa651109db9871647d7221dd79c17a28d004518f05d441c7d1cd5de3c8ecf1dc42463c81d6cc8e15e3ed8ede322ddd10f6bd2ef0d1037d94156b7211d3387823430b1917f590349cbb40ad8ea85e42952bec1df8e62156a4ea115d9d36dabdc4f78918fc40ce48950b64c16debf9fdc09e5571094e7d465ede8c805032d815f4ab067ce1f09436d310c1754e799cb6b5d6e6552dde7814ed07bd70a0757a2f8b2e7735780202eebd7ef3e9f8436bf6c21e21ee18a9832d3f303324d3bba98137b1ac0dfd17a4a3bdf54cbaf38d936e1013efcb4405218a8fdc48e4e64fdf1dbf55d73cedaf8011e64f6426888c481c2811ea7426c838230b038c32bc0f3b9df6c0e8d89665c778761714b7aad996d675f585dac4e6ec24219ca13852fb566bb4800f5c94fc336469bec4543ed36d6530ba5211188c6ada661d02121e5ab375ab441f19916c4aa414f89fdc81aa45e86530ae421760d8413c54ad95bf5335dfbf046cb201c4f8c5ed90cc5b233ec8faf1f71311cc8f0516ba26533ba204d446b27c3973338e7436c99c900ff06d4f85f5ee2d4eabce5196d386a5f376a69d4bae133305de03a590072e70e0d44ac4b4fd42058e46fbaeae1ffd2729645c3255e5e67ed2b0cd655e5fdb707051140f92b19333dbcd88bcf662eb9680df2f6e3c4cd0483ed7d9697d11c974c5defb823787123e82fab2f361584e8eb0739d8df9e0905d05c17230c8a4e0b5da9ec0e99e40e628c59120494c17b96622942e013cf81f592a9ea5509371001ce7148e4bd60d9f1b439a245b6a833e0a64e6cb279bdb575f3a579e78250f3f68b7d02b94d96b9ae4a76ff073b10a7777130e0a11d2453acd8336f237f70b3e614127c0759adc463c8f2c346ec9a8dcb95f3bcbe974a63</script></div><script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 日志记录 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>句子摘录</title>
+      <link href="/2020/05/31/%E5%8F%A5%E5%AD%90%E6%91%98%E5%BD%95/"/>
+      <url>/2020/05/31/%E5%8F%A5%E5%AD%90%E6%91%98%E5%BD%95/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> 摘录 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 句子 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>会议信息</title>
+      <link href="/2020/05/31/2020AI%E4%BC%9A%E8%AE%AE/"/>
+      <url>/2020/05/31/2020AI%E4%BC%9A%E8%AE%AE/</url>
+      
+        <content type="html"><![CDATA[<h2 id="会议截稿时间"><a href="#会议截稿时间" class="headerlink" title="会议截稿时间"></a>会议截稿时间</h2><ul><li>会议信息:<a href="https://github.com/Sophia-11/AI-Conference" target="_blank" rel="noopener">https://github.com/Sophia-11/AI-Conference</a></li><li>deadline：<a href="https://aideadlin.es/?sub=ML,CV,NLP,RO,SP,DM" target="_blank" rel="noopener">https://aideadlin.es/?sub=ML,CV,NLP,RO,SP,DM</a></li></ul><h2 id="相关网站"><a href="#相关网站" class="headerlink" title="相关网站"></a>相关网站</h2><ul><li><a href="https://chillee.github.io/OpenReviewExplorer/" target="_blank" rel="noopener">ICLR 2020 Open Review Explorer</a></li></ul>]]></content>
       
       
       <categories>
@@ -29,11 +595,11 @@
     
     
     <entry>
-      <title>awesome hexo</title>
-      <link href="/2020/02/05/awesome-hexo/"/>
-      <url>/2020/02/05/awesome-hexo/</url>
+      <title>awesome-hexo</title>
+      <link href="/2020/05/31/awesome-hexo/"/>
+      <url>/2020/05/31/awesome-hexo/</url>
       
-        <content type="html"><![CDATA[<h2 id="hexo主题"><a href="#hexo主题" class="headerlink" title="hexo主题"></a>hexo主题</h2><ul><li><a href="https://github.com/devjin0617/awesome-hexo-theme" target="_blank" rel="noopener">https://github.com/devjin0617/awesome-hexo-theme</a></li><li><a href="https://hexo.io/themes/" target="_blank" rel="noopener">官方网站</a></li></ul><h2 id="hexo工具"><a href="#hexo工具" class="headerlink" title="hexo工具"></a>hexo工具</h2>]]></content>
+        <content type="html"><![CDATA[<h2 id="hexo主题"><a href="#hexo主题" class="headerlink" title="hexo主题"></a>hexo主题</h2><ul><li><a href="https://github.com/devjin0617/awesome-hexo-theme" target="_blank" rel="noopener">https://github.com/devjin0617/awesome-hexo-theme</a></li><li><a href="https://hexo.io/themes/" target="_blank" rel="noopener">官方网站</a></li><li><a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank" rel="noopener">https://github.com/yelog/hexo-theme-3-hexo</a></li></ul>]]></content>
       
       
       <categories>
@@ -54,51 +620,25 @@
     
     
     <entry>
-      <title>Hexo 搭建博客</title>
-      <link href="/2020/02/05/Hexo-%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/"/>
-      <url>/2020/02/05/Hexo-%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</url>
+      <title>Hexo-搭建博客</title>
+      <link href="/2020/05/31/Hexo-%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/"/>
+      <url>/2020/05/31/Hexo-%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/</url>
       
-        <content type="html"><![CDATA[<h3 id="基本搭建步骤"><a href="#基本搭建步骤" class="headerlink" title="基本搭建步骤"></a>基本搭建步骤</h3><ul><li><p>参考资料</p><ul><li><p><a href="https://juejin.im/post/5d81d3036fb9a06b3260a901" target="_blank" rel="noopener">hexo+github+hexo-theme-matery搭建个人博客</a></p><ul><li><p>git、github设置</p></li><li><p>hexo安装和初始化</p><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">## 本地启动</span>hexo s<span class="token comment" spellcheck="true">## 发布到github(需要配置)</span>hexo d</code></pre><p>本地浏览器访问:<a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a></p><p>注意:</p><pre><code>在发布时如果本地已存在public需要执行hexo clean或者手动删除public目录，不然不会提交最新代码</code></pre></li></ul><ul><li>新增文章<pre><code>hexo new page [文章名]</code></pre></li><li>hexo-theme-matery主题设置–<a href="https://blinkfox.github.io/2018/09/28/qian-duan/hexo-bo-ke-zhu-ti-zhi-hexo-theme-matery-de-jie-shao/" target="_blank" rel="noopener">官方教程</a></li></ul></li></ul></li></ul><h2 id="相关工具和技巧"><a href="#相关工具和技巧" class="headerlink" title="相关工具和技巧"></a>相关工具和技巧</h2><ul><li>可视化编写博客–<a href="https://github.com/jaredly/hexo-admin" target="_blank" rel="noopener">hexo-admin</a><pre><code>## 启动命令hexo server -d</code></pre></li></ul><p>```<br>    本地浏览器访问:<a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a></p><ul><li>懒人发布工具–<a href="https://github.com/Hochikong/HexoPubAssistant" target="_blank" rel="noopener">HexoPubAssistant</a>(未测试）</li></ul>]]></content>
+        <content type="html"><![CDATA[<h3 id="基本搭建步骤"><a href="#基本搭建步骤" class="headerlink" title="基本搭建步骤"></a>基本搭建步骤</h3><ul><li><p>参考资料</p><ul><li><p><a href="https://juejin.im/post/5d81d3036fb9a06b3260a901" target="_blank" rel="noopener">hexo+github+hexo-theme-matery搭建个人博客</a></p><ul><li>git、github设置</li><li><p>hexo安装和初始化</p><pre class=" language-lang-bash"><code class="language-lang-bash">## 本地启动hexo s## 发布到github(需要配置)hexo d</code></pre><p>本地浏览器访问:<a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a></p><p>注意:</p><pre><code>在发布时如果本地已存在public需要执行hexo clean或者手动删除public目录，不然不会提交最新代码</code></pre></li></ul><ul><li>新增文章<pre><code>hexo new page [文章名]</code></pre></li><li>hexo-theme-matery主题设置—<a href="https://blinkfox.github.io/2018/09/28/qian-duan/hexo-bo-ke-zhu-ti-zhi-hexo-theme-matery-de-jie-shao/" target="_blank" rel="noopener">官方教程</a></li></ul></li></ul></li></ul><h2 id="相关工具和技巧"><a href="#相关工具和技巧" class="headerlink" title="相关工具和技巧"></a>相关工具和技巧</h2><ul><li>可视化编写博客—<a href="https://github.com/jaredly/hexo-admin" target="_blank" rel="noopener">hexo-admin</a><br>```<h2 id="启动命令"><a href="#启动命令" class="headerlink" title="启动命令"></a>启动命令</h2>hexo server -d</li></ul><p>```<br>    本地浏览器访问:<a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a></p><ul><li>懒人发布工具—<a href="https://github.com/Hochikong/HexoPubAssistant" target="_blank" rel="noopener">HexoPubAssistant</a>(未测试）</li><li>vscode插件： <a href="https://marketplace.visualstudio.com/items?itemName=fantasy.vscode-hexo-utils" target="_blank" rel="noopener">https://marketplace.visualstudio.com/items?itemName=fantasy.vscode-hexo-utils</a></li></ul><h2 id="博客优化"><a href="#博客优化" class="headerlink" title="博客优化"></a>博客优化</h2><ul><li>优化过程见：<a href="https://tqraf.cn/2020/04/hexoblog.html" target="_blank" rel="noopener">链接</a></li></ul><h2 id="相关设置"><a href="#相关设置" class="headerlink" title="相关设置"></a>相关设置</h2><ul><li><a href="https://www.bookstack.cn/read/mpe/zh-cn-customize-css.md" target="_blank" rel="noopener">https://www.bookstack.cn/read/mpe/zh-cn-customize-css.md</a></li></ul>]]></content>
       
       
       <categories>
           
-          <category> 博客搭建 </category>
+          <category> 环境搭建 </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> 环境搭建 </tag>
+            <tag> 博客搭建 </tag>
             
         </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>research</title>
-      <link href="/2020/02/01/research/"/>
-      <url>/2020/02/01/research/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Hello World</title>
-      <link href="/2020/02/01/hello-world/"/>
-      <url>/2020/02/01/hello-world/</url>
-      
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server</code></pre><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate</code></pre><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy</code></pre><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
-      
-      
       
     </entry>
     
